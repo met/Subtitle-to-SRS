@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "My Netflix Experiment - Save phrases",
+  "name": "Subtitle to SRS",
   "description": "Save phrases from Netflix for learn them in SRS.",
   "version": "0.1",
 
-  "permissions": ["contextMenus"],
+  "permissions": ["contextMenus", "activeTab"],
 
   "background": {
     "scripts": ["background.js"],
@@ -17,5 +17,22 @@
   "content_scripts": [{
   	"matches": ["https://*.netflix.com/*"],
   	"js": ["content.js"]
-  }]
+  }],
+
+  "commands": {
+    "save-item": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "Save subtitle"
+    },
+
+    "export": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E"
+      },
+      "description": "Export all subtitles"
+    }
+
+  }
 }

@@ -3,8 +3,8 @@ chrome.runtime.onMessage.addListener(function(msg, sender) {
 		saveCurrentSubtitleItem();
 	}
 
-	if (msg == "list") {
-		showSavedItems();
+	if (msg == "export") {
+		exportItems();
 	}
 });
 
@@ -30,19 +30,27 @@ function saveCurrentSubtitleItem() {
 
 	localStorage.setItem("srs-saved-" + timestamp, stringifiedObj);
 
-	console.log("Saving:" + stringifiedObj)
+	console.log("Saving:" + stringifiedObj);
 };
 
-function showSavedItems() {
+function exportItems() {
 
-	console.log("SHOWING SAVED ITEMS");
+	// look at local storage, find keys of every saved items and sort them 
+	var keys = Object.keys(localStorage).filter(key => key.startsWith("srs-saved")).sort();
 
-	// filter our localStorage items
-	var keys = Object.keys(localStorage).filter(key => key.startsWith("srs-saved"));
+	if (keys.length == 0) {
+		console.log("Export called by we have nothing for export. Export canceled.");
+		return;
+	}
+	var tsvItems = [];
 
 	keys.forEach(function(item) {
-		console.log(localStorage.getItem(item));
+		// parse JSON item to JS array, transform that array into string with tabs separator,
+		// and push result to new array
+		tsvItems.push(JSON.parse(localStorage.getItem(item)).join("\t"));
 	});
 
-	// TODO make better = show in webpage
+	var tsvExport = tsvItems.join("\n");
+
+	window.open("data:text/tab-separated-values," + encodeURIComponent(tsvExport));
 }
